@@ -5,7 +5,8 @@ window.AntiSalpit = {
 
     /** COMPONENTS */
     components: {
-        Inputs
+        Inputs,
+        Printer
     },
 
 
@@ -141,6 +142,14 @@ window.AntiSalpit = {
             if (btnPair) {
                 btnPair.blur();
             }
+        },
+
+        /**
+         * @method handlePrint
+         * @description Handle print event.
+         */
+        handlePrint() {
+            this.$refs['printer'].print();
         }
     },
 

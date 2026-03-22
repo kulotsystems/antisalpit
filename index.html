@@ -54,6 +54,38 @@
                 >
                     Go
                 </button>
+                <button
+                    class="btn btn-lg fw-bold btn-outline-secondary d-none d-sm-inline-block"
+                    @click="$emit('print')"
+                    style="height: 54px;"
+                    :disabled="isEmptyInput1 || isEmptyInput2"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+                        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Printer Component -->
+    <template id="Printer">
+        <div id="print-pairs" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 15px;">{{ input1 }} x {{ input2 }}</h2>
+            <hr/>
+            <div class="row">
+                <div
+                    :class="`col-${colClass} col-sm-${colClass} col-md-${colClass} col-lg-${colClass} col-xl-${colClass}`"
+                    v-for="(col, colIndex) in pairCols"
+                >
+                    <div v-for="(pairData, pairDataIndex) in col">
+                        <small style="opacity: 0.8; font-family: monospace;">{{(pairData.num).toString().padStart(max.toString().length, '&nbsp;')}}. </small>
+                        <span style="font-size: 20px;">
+                            <b>{{ pairData.pair.n1.toString().padStart(max.toString().length, '0') }}</b> x <b>{{ pairData.pair.n2.toString().padStart(max.toString().length, '0') }}</b>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </template>
@@ -61,13 +93,14 @@
     <!-- Main Component -->
     <template id="AntiSalpit">
         <div class="sticky-top bg-dark pb-3">
-            <inputs @submit-inputs="processInputs"></inputs>
+            <inputs @submit-inputs="processInputs" @print="handlePrint"></inputs>
         </div>
         <div class="container">
             <div class="row" style="justify-content: center;">
                 <div
                     class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2 p-2"
                     v-for="(pair, pairKey, pairIndex) in activePairs"
+                    :key="pairKey"
                 >
                     <button
                         class="btn w-100 h-100 btn-lg d-flex justify-content-between"
@@ -89,6 +122,14 @@
                 </div>
             </div>
         </div>
+        <printer
+            :pairs="activePairs"
+            :min="min"
+            :max="max"
+            :input1="input1"
+            :input2="input2" ref="printer"
+        >
+        </printer>
     </template>
 
     <!-- App -->
@@ -98,6 +139,7 @@
 
     <!-- Scripts -->
     <script src="src/js/components/Inputs.vue.js"></script>
+    <script src="src/js/components/Printer.vue.js"></script>
     <script src="src/js/AntiSalpit.vue.js"></script>
     <script src="src/js/main.js"></script>
 </body>
