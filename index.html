@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>antisalpit</title>
+    <link rel="stylesheet" href="dist/bootstrap-5.3.8/css/bootstrap.min.css"/>
+    <script src="dist/vue-3.5.30/vue.global.js"></script>
+</head>
+<body>
+    <!-- Inputs Component -->
+    <template id="Inputs">
+        <div class="container pt-3">
+            <div class="d-flex justify-content-center align-items-center" style="column-gap: 10px;">
+                <div class="form-floating" style="min-width: 120px;">
+                    <input
+                        type="number"
+                        class="form-control form-control-lg fw-bold"
+                        :class="{ 'text-danger': !isEmptyInput1 && !isValidInput1 }"
+                        id="input-1"
+                        v-model.number="input1"
+                        :min="min"
+                        :max="max"
+                        placeholder="Numero #1"
+                        @keyup.enter="go"
+                        @blur="() => { if (!isEmptyInput1 && input1 < min) { input1 = min } else if (!isEmptyInput1 && input1 > max) { input1 = max } }"
+                    >
+                    <label for="input-1" :class="{ 'text-danger': !isEmptyInput1 && !isValidInput1 }">Numero #1</label>
+                </div>
+                <div class="form-floating" style="min-width: 120px;">
+                    <input
+                        type="number"
+                        class="form-control form-control-lg fw-bold"
+                        :class="{ 'text-danger': !isEmptyInput2 && !isValidInput2 }"
+                        id="input-2"
+                        v-model.number="input2"
+                        :min="min"
+                        :max="max"
+                        placeholder="Numero #2"
+                        @keyup.enter="go"
+                        @blur="() => { if (!isEmptyInput2 && input2 < min) { input2 = min } else if (!isEmptyInput2 && input2 > max) { input2 = max } }"
+                    >
+                    <label for="input-2" :class="{ 'text-danger': !isEmptyInput2 && !isValidInput2 }">Numero #2</label>
+                </div>
+                <button
+                    class="btn btn-lg fw-bold"
+                    :class="{
+                        'btn-outline-success': !isValidInput1 || !isValidInput2,
+                        'btn-success'        : isValidInput1  && isValidInput2,
+                    }"
+                    style="height: 54px;"
+                    @click="go"
+                    :disabled="isEmptyInput1 || isEmptyInput2"
+                >
+                    Go
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Main Component -->
+    <template id="AntiSalpit">
+        <div class="sticky-top bg-dark pb-3">
+            <inputs @submit-inputs="processInputs"></inputs>
+        </div>
+        <div class="container">
+            <div class="row" style="justify-content: center;">
+                <div
+                    class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2 p-2"
+                    v-for="(pair, pairKey, pairIndex) in activePairs"
+                >
+                    <button
+                        class="btn w-100 h-100 btn-lg d-flex justify-content-between"
+                        :id="`pair-${pair.n1}-${pair.n2}`"
+                        :class="{
+                            'btn-outline-success bg-dark text-success': pair.on,
+                            'btn-outline-secondary bg-dark text-secondary border-dark': !pair.on
+                        }"
+                        :style="{
+                            opacity: pair.on ? '1' : '0.7',
+                        }"
+                        @click="togglePair(pair)"
+                    >
+                        <small style="opacity: 0.6;">{{pairIndex + 1}}. </small>
+                        <span>
+                            <b>{{ pair.n1.toString().padStart(max.toString().length, '0') }}</b> x <b>{{ pair.n2.toString().padStart(max.toString().length, '0') }}</b>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- App -->
+    <div id="app">
+        <AntiSalpit></AntiSalpit>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/components/Inputs.vue.js"></script>
+    <script src="src/js/AntiSalpit.vue.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
